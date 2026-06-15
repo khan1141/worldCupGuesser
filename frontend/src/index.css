@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Sunset-festival base */
+  --color-bg: #170B2B;
+  --color-surface: #221238;
+  --color-surface-elevated: #2C1847;
+  --color-border: #3B2659;
+  --color-border-subtle: #2C1847;
+
+  --color-gold: #FACC15;
+  --color-gold-dim: #D4A912;
+  --color-cyan: #22D3EE;
+  --color-cyan-dim: #0EA5C4;
+
+  --color-pink: #EC4899;
+  --color-pink-dim: #DB2777;
+  --color-lime: #A3E635;
+
+  --color-fg: #F4EEFB;
+  --color-fg-muted: #C4B5D4;
+  --color-fg-faint: #6B5B86;
+
+  --color-success: #A3E635;
+  --color-danger: #F43F5E;
+
+  /* Hero sky gradient (atmosphere layer only) */
+  --gradient-sky: linear-gradient(180deg, #1B0B3A 0%, #3B1259 38%, #7A2A6B 62%, #D45A3C 82%, #F6A24A 100%);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-body);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-fg-muted); }
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-gold);
+  color: var(--color-bg);
+}

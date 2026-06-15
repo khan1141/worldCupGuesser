@@ -1,0 +1,109 @@
+/* ============================================================
+   FestivalHero — Layer 1 "atmosphere" + gentle bunting
+   All motion is transform/opacity only and is disabled for
+   users who prefer reduced motion. Decorative + inert.
+   ============================================================ */
+
+.fh-root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Sky lives in its own slightly-oversized layer so parallax can
+   nudge it without ever revealing an edge. */
+.fh-sky {
+  position: absolute;
+  inset: -28px;
+  background: var(--gradient-sky);
+}
+
+/* Parallax-driven layers get GPU compositing. */
+.fh-layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* Soft vignette so content sitting on top stays legible */
+.fh-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 38%,
+    transparent 0%,
+    rgba(23, 11, 43, 0.35) 78%,
+    rgba(23, 11, 43, 0.7) 100%
+  );
+}
+
+/* --- String lights ------------------------------------------------ */
+.fh-light {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffe9a8;
+  box-shadow: 0 0 6px 1px rgba(255, 233, 168, 0.7);
+  animation: fh-twinkle var(--dur, 2.6s) ease-in-out infinite var(--delay, 0s);
+}
+
+/* --- Bokeh orbs --------------------------------------------------- */
+.fh-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2px);
+  will-change: transform;
+  animation: fh-drift var(--dur, 9s) ease-in-out infinite var(--delay, 0s);
+}
+
+/* --- Flag bunting ------------------------------------------------- */
+.fh-bunting {
+  position: absolute;
+  top: 6%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+.fh-flag {
+  width: 26px;
+  height: 34px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  animation: fh-sway var(--dur, 3.2s) ease-in-out infinite var(--delay, 0s);
+}
+
+/* --- Crowd silhouette -------------------------------------------- */
+.fh-silhouette {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+@keyframes fh-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
+}
+
+@keyframes fh-drift {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(var(--dx, 16px), var(--dy, -12px), 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes fh-sway {
+  0%, 100% { transform: skewX(-4deg); }
+  50%      { transform: skewX(4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fh-light,
+  .fh-orb,
+  .fh-flag {
+    animation: none;
+  }
+  .fh-light { opacity: 0.7; }
+  .fh-flag { transform: skewX(0deg); }
+}
