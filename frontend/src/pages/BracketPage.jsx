@@ -1,11 +1,9 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useTournamentStore } from '@/store/tournamentStore'
 import BracketColumn from '@/components/bracket/BracketColumn'
 import BracketMatch from '@/components/bracket/BracketMatch'
 import Connectors from '@/components/bracket/Connectors'
 import ChampionCard from '@/components/bracket/ChampionCard'
-import AIInsightPanel from '@/components/ai/AIInsightPanel'
 import { ROUND_LABELS } from '@/data/bracketStructure'
 
 // Mirrored wallchart: matches 0..7 of each round flow down the left half,
@@ -39,12 +37,6 @@ function RoundLabel({ children }) {
 
 export default function BracketPage() {
   const { knockoutMatches, setStage, getTeamById } = useTournamentStore()
-  const [hoveredTeam, setHoveredTeam] = useState(null)
-  const [aiOpen, setAiOpen] = useState(false)
-
-  const handleTeamHover = (team) => {
-    setHoveredTeam(team)
-  }
 
   const finalWinner = knockoutMatches.FINAL?.[0]?.winner
   const isBracketComplete = !!finalWinner
@@ -88,12 +80,7 @@ export default function BracketPage() {
           {/* Left half: outer rounds advance inward → */}
           {LEFT_COLUMNS.map(({ round, indices, delay }) => (
             <div key={`L-${round}`} className="contents">
-              <BracketColumn
-                round={round}
-                indices={indices}
-                onTeamClick={handleTeamHover}
-                delay={delay}
-              />
+              <BracketColumn round={round} indices={indices} delay={delay} />
               <Connectors count={CONNECTOR_COUNTS[round]} />
             </div>
           ))}
@@ -109,12 +96,12 @@ export default function BracketPage() {
 
             <div className="w-full">
               <RoundLabel>{ROUND_LABELS.FINAL}</RoundLabel>
-              <BracketMatch round="FINAL" matchIndex={0} onTeamClick={handleTeamHover} highlight />
+              <BracketMatch round="FINAL" matchIndex={0} highlight />
             </div>
 
             <div className="w-full border-t border-[var(--color-border)] pt-4">
               <RoundLabel>{ROUND_LABELS.THIRD}</RoundLabel>
-              <BracketMatch round="THIRD" matchIndex={0} onTeamClick={handleTeamHover} />
+              <BracketMatch round="THIRD" matchIndex={0} />
             </div>
           </motion.div>
 
@@ -122,42 +109,11 @@ export default function BracketPage() {
           {RIGHT_COLUMNS.map(({ round, indices, delay }) => (
             <div key={`R-${round}`} className="contents">
               <Connectors count={CONNECTOR_COUNTS[round]} mirrored />
-              <BracketColumn
-                round={round}
-                indices={indices}
-                mirrored
-                onTeamClick={handleTeamHover}
-                delay={delay}
-              />
+              <BracketColumn round={round} indices={indices} mirrored delay={delay} />
             </div>
           ))}
         </div>
       </div>
-
-      {/* AI insight panel */}
-      <AIInsightPanel
-        team={hoveredTeam}
-        isOpen={aiOpen}
-        onClose={() => setAiOpen(false)}
-      />
-
-      {/* Floating AI button when team is hovered */}
-      <AnimatePresence>
-        {hoveredTeam && !aiOpen && (
-          <motion.button
-            key="ai-float"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setAiOpen(true)}
-            className="fixed bottom-6 right-6 px-4 py-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl text-sm font-medium text-[var(--color-fg)] hover:border-[var(--color-gold)]/40 transition-colors shadow-xl cursor-pointer flex items-center gap-2"
-          >
-            <span className="w-2 h-2 rounded-full bg-[var(--color-cyan)] animate-pulse" />
-            AI: {hoveredTeam.teamName}
-          </motion.button>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
